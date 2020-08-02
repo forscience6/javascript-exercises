@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+  window.addEventListener('keydown', function (e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    const sound = key.querySelector('.sound');
+
+    if(!audio) {return;} //stop function if the key pressed has no corresponding audio.
+    
+    audio.currentTime = 0; //reset the audio timer to 0. Allows you to play the sound even if you hit the keys in quick succession. 
+    audio.play();
+
+    key.classList.add('playing'); //add the .playing class defined in CSS.
+
+    console.log(e.keyCode, sound.textContent); //e is the object belonging to the keydown action.
+  
+  });
+
+  function removeTransition(e) {
+    if(e.propertyName !== 'transform') {return;} //skip if transition is not "transform". This line is not necessary since the key that will be transitions will always have the "transform" css property.
+    //console.log(e); //e is the object belonging to the transitioned property in CSS. 
+    //console.log(this); //prints out the entire <div> with the key that has transitioned; "this" always refers to the object the addEventListener() is called against which is "key".
+
+    this.classList.remove('playing'); //remove the .playing css class from the element referenced by the "key" object.
+  }
+
+  const keys = document.querySelectorAll('.key');
+
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition)); //listens for any Transitions that can happen within elements with the .key class and applies removeTransition() to that element. 
+
+</script>
+
+
+</body>
+</html>
+
+<!--a walkthough to this exercies can be found on youtube.-->
